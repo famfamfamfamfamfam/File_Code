@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "TRAN_THI_THAI_BINH/1.0.0": {
+        "runtime": {
+          "TRAN_THI_THAI_BINH.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "TRAN_THI_THAI_BINH/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
