@@ -9,23 +9,24 @@
                 DateTime d1 = DateTime.Now;
                 
                 Console.CursorVisible = false;
+                Console.Clear();
                 SnakeControl snake = new SnakeControl();
                 Thread _game = new Thread(snake.GetKey);
                 _game.Start();
-                while(!snake.EatSelf() && SnakeControl.running && SnakeControl._speed > 0)
+                while(!snake.EatSelf() && snake.running && snake._speed > 0)
                 {
-                    Console.Clear();
                     snake.DrawBoard();
                     snake.SetUpBoard();
+                    snake.BehindTheBoard();
                     snake.ForDirection();
                     snake.MoveSnakeHead();
                     snake.EatFood();
                     snake.SpawnBody();
                     snake.PopUpFood();
                     snake.ShowScore();
-                    Thread.Sleep(SnakeControl._speed);
+                    Thread.Sleep(snake._speed);
                 }
-                if (SnakeControl.running)
+                if (snake.running)
                 {
                     snake.Stop();
                     Console.Write(new string(' ', "Press any key else to quit".Length));
@@ -46,7 +47,7 @@
                 using(StreamWriter writer = new StreamWriter(textPath, true))
                 {
                     writer.WriteLine(d1 + " - " + d2);
-                    writer.WriteLine("Score: " + SnakeControl._score);
+                    writer.WriteLine("Score: " + snake._score);
                     writer.WriteLine();
                 }
             }

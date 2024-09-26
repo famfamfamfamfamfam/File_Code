@@ -7,20 +7,38 @@ namespace SNAKEGAME
 {
     class SnakeControl
     {
-        static Point food = new Point(-1, -1);
-        static bool foodExist = false;
-        static int row = 20;
-        static int col = 50;
-        static int speed = 300;
-        public static int _speed { get => speed; }
-        static bool _running = true;
-        public static bool running { get => _running; }
-        static int score;
-        public static int _score { get => score; }
-        static string direction = "Right";
-        static Point[] body = { new Point(-1, -1) };
-        static Point _head = new Point(10, 1);
-        static string[, ] board = new string[row, col];
+        Point food;
+        bool foodExist;
+        int row;
+        int col;
+        int speed;
+        public int _speed { get => speed; }
+        bool _running;
+        public bool running { get => _running; }
+        int score;
+        public int _score { get => score; }
+        string direction;
+        string subDirection;
+        Point[] body;
+        Point _head;
+        string[, ] board;
+        string[, ] hiddenBoard;
+
+        public SnakeControl()
+        {
+            food = new Point(-1, -1);
+            foodExist = false;
+            row = 20;
+            col = 50;
+            speed = 300;
+            _running = true;
+            direction = "Right";
+            subDirection = "Right";
+            body = new Point[] { new Point(-1, -1) };
+            _head = new Point(10, 1);
+            board = new string[row, col];
+            hiddenBoard = new string[row, col];
+        }
 
         public void DrawBoard()
         {
@@ -106,26 +124,30 @@ namespace SNAKEGAME
                 switch (keyInfo.Key)
                 {
                     case ConsoleKey.RightArrow:
-                        if (direction == "Up" || direction == "Down")
+                        if (subDirection == "Up" || subDirection == "Down")
                         {
+                            subDirection = "Right";
                             keys.Enqueue("Right");
                         }
                         break;
                     case ConsoleKey.LeftArrow:
-                        if (direction == "Up" || direction == "Down")
+                        if (subDirection == "Up" || subDirection == "Down")
                         {
+                            subDirection = "Left";
                             keys.Enqueue("Left");
                         }
                         break;
                     case ConsoleKey.UpArrow:
-                        if (direction == "Right" || direction == "Left")
+                        if (subDirection == "Right" || subDirection == "Left")
                         {
-                            keys.Enqueue("Up");                            
+                            subDirection = "Up";
+                            keys.Enqueue("Up");
                         }
                         break;
                     case ConsoleKey.DownArrow:
-                        if (direction == "Right" || direction == "Left")
+                        if (subDirection == "Right" || subDirection == "Left")
                         {
+                            subDirection = "Down";
                             keys.Enqueue("Down");                            
                         }
                         break;
@@ -148,27 +170,40 @@ namespace SNAKEGAME
             {
                 for (int j = 0; j < col; j++)
                 {
-                    if (board[i, j] == "~")
+                    if(board[i, j] != hiddenBoard[i, j])
                     {
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                    }
-                    else
-                    {
-                        if (board[i, j] == "$")
+                        if (board[i, j] == "~")
                         {
-                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.ForegroundColor = ConsoleColor.Cyan;
                         }
-                        else if (board[i, j] == "O" || board[i, j] == "o")
+                        else
                         {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                        }
-                        else {}
+                            if (board[i, j] == "$")
+                            {
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                            }
+                            else if (board[i, j] == "O" || board[i, j] == "o")
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                            }
+                            else {}
                     }
+                    Console.SetCursorPosition(j, i);
                     Console.Write(board[i, j]);
+                    }
                 }
-                Console.WriteLine();
             }
             Console.ResetColor();
+        }
+        public void BehindTheBoard()
+        {
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < col; j++)
+                {
+                    hiddenBoard[i, j] = board[i, j];
+                }
+            }
         }
         public void PopUpFood()
         {
@@ -244,6 +279,7 @@ namespace SNAKEGAME
         }
         public void ShowScore()
         {
+            Console.SetCursorPosition(0, row);
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Score: " + score);
             Console.ForegroundColor = ConsoleColor.DarkGreen;
